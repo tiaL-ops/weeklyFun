@@ -17,8 +17,16 @@ class ChatBot:
 
     def __init__(self,content):
         self.content= content
-        self.greetings=["hi","whatsup", "hello","hola"]
-        self.responses=["greetings", " how are you", " how can i help you", "hiiii"]
+        self.input={
+            'greetings':["hi","whatsup", "hello","hola"],
+            'goodbye':["bye","aurevoir", "see you","travel safe"],
+            'funny':["hahaha","lol", "lmao","got me rolling"]
+        }
+        self.responses={
+            'greetings':["hi","hiii", "how are youu","helloooo"],
+            'goodbye':["been nice talking to you","can't wait to see you ", "see you","travel safe"],
+            'funny':["hahahahaa","you are so funnyy", "so coooll","LLLLOOOOOLLLL"]
+        }
     
     def process(self):
         tokens=nltk.word_tokenize(self.content)
