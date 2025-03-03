@@ -3,6 +3,12 @@
 You will create a Python-based chatbot that can recognize greetings, tell jokes, detect emotions, and (optionally) fetch real-time weather updates using an API.  
 
 ---
+* To run * 
+Virstual environement : 
+source myenv/bin/activated
+python3 -m pip install --upgrade pip --break-system-packages
+python3 -m pip install nltk --break-system-packages
+
 
 ## **💡 Step 1: Setup Your Development Environment**  
 Before starting, make sure you have the following installed:  
