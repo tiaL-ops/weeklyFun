@@ -16,7 +16,8 @@ import random
 class ChatBot:
 
     def __init__(self,content):
-        self.content= content
+        self.content= content.lower()
+        
         self.input={
             'greetings':["hi","whatsup", "hello","hola"],
             'goodbye':["bye","aurevoir", "see you","travel safe"],
@@ -40,19 +41,19 @@ class ChatBot:
     
     def detect_intent(self):
         tokenized_Word=self.process()
-        for token in tokenized_Word:
-            if token in self.greetings:
-                return "greetings"
+        for key , values in self.input.items():
+            if any(token in values for token in tokenized_Word):
+                return key
         return "Unknown"
     
     def answer(self):
         if self.detect_intent() == "greetings":
-            return random.choice(self.responses)
+            return random.choice(self.responses[self.detect_intent()])
         else:
             return " Sorry I can't catch that"
     
 
-x= "We need to save the world,hi."
+x= "hi"
 myChat = ChatBot(x)
 y=myChat.process()
 
