@@ -10,6 +10,11 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
 import random
+import python_weather
+
+import asyncio
+import os
+
 
 #nltk.download('all')
 
@@ -21,12 +26,14 @@ class ChatBot:
         self.input={
             'greetings':["hi","whatsup", "hello","hola"],
             'goodbye':["bye","aurevoir", "see you","travel safe"],
-            'funny':["hahaha","lol", "lmao","got me rolling"]
+            'funny':["hahaha","lol", "lmao","got me rolling"],
+            'weather':["weather","time","sunny"]
         }
         self.responses={
             'greetings':["hi","hiii", "how are youu","helloooo"],
             'goodbye':["been nice talking to you","can't wait to see you ", "see you","travel safe"],
             'funny':["hahahahaa","you are so funnyy", "so coooll","LLLLOOOOOLLLL"]
+           
         }
     
     def process(self):
@@ -49,11 +56,20 @@ class ChatBot:
     def answer(self):
         if self.detect_intent() == "greetings":
             return random.choice(self.responses[self.detect_intent()])
+        elif self.detect_intent() == "weather":
+            if os.name == 'nt':
+                asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+            return asyncio.run(self.getweather())
         else:
             return " Sorry I can't catch that"
+            
+    async def getweather(self):
+        async with python_weather.Client(unit=python_weather.IMPERIAL) as client:
+            weather = await client.get('New York')
+            return f"The weather in NewYork is {weather.temperature}"
     
 
-x= "hi"
+x= "What is teh weather today?"
 myChat = ChatBot(x)
 y=myChat.process()
 
