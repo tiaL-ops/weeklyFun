@@ -4,7 +4,7 @@ import sqlite3
 
 app = Flask(__name__)
 
-def get_db_connection():
+def get_db():
     conn = sqlite3.connect("db.sqlite")
     conn.row_factory = sqlite3.Row  # Helps return rows as dictionaries
     return conn
@@ -18,7 +18,7 @@ class User():
         self.email=email
 
     def createUser(self):
-        db=get_db_connection()
+        db=get_db()
         cursor=db.cursor()
         cursor.execute("INSERT INTO User (name, age, email) VALUES (?, ?, ?)", (self.name, self.age, self.email))
         db.commit()
@@ -72,7 +72,7 @@ def create_user():
 
 @app.route("/users/<id>", methods=['GET'])
 def getUsersId(id):
-    db=get_db_connection()
+    db=get_db()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM Users WHERE id = ?", (id,))
     result = cursor.fetchone()
@@ -80,7 +80,7 @@ def getUsersId(id):
 
 @app.route("/users/<id>", methods=['PUT'])
 def updateUserDetails(id):
-    db=get_db_connection()
+    db=get_db()
     data = request.get_json()
     name = data.get("name")
     age = data.get("age")
@@ -94,7 +94,7 @@ def updateUserDetails(id):
 
 @app.route("/users/<id>",methods=['DELETE'])
 def deleteUserDetails(id):
-    db=get_db_connection()
+    db=get_db()
     cursor=db.cursor()
     cursor.execute("DELETE FROM Users WHERE id = ?", (id,))
     db.commit()
