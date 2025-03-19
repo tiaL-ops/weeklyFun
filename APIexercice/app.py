@@ -4,11 +4,12 @@ import sqlite3
 
 app = Flask(__name__)
 
+dummydb={ "admin": {"password": "password123"} }
+
 def get_db():
     conn = sqlite3.connect("db.sqlite")
     conn.row_factory = sqlite3.Row  # Helps return rows as dictionaries
     return conn
-
 
 class User():
    
@@ -39,8 +40,9 @@ PUT /users/<id> → Update user details
 DELETE /users/<id> → Remove a user
 """
 @app.route("/users", methods=['GET'])
+@;miter.limit(10 per minute)
 def fetchAllUser():
-    if request.method == 'GET':
+        db=get_db()
         cursor = db.cursor()
         cursor.execute("SELECT * FROM User")
         users = cursor.fetchall()
@@ -85,7 +87,7 @@ def updateUserDetails(id):
     name = data.get("name")
     age = data.get("age")
     email = data.get("email")
-    
+
     cursor = db.cursor()
     cursor.execute("UPDATE Users SET name = ?, age = ?, email = ? WHERE id = ?", (name, age, email, id))
     db.commit()
@@ -99,4 +101,21 @@ def deleteUserDetails(id):
     cursor.execute("DELETE FROM Users WHERE id = ?", (id,))
     db.commit()
     return {"message":"deleteSuccessfully"},201
+    
+@app.route("/login",methods=['POST'])
+def login():
+    data=request.get_json()
+    username=data.get("username")
+    password=data.get("password")
+    if username in Auth and password == Auth.Password :
+        access_token=create_token(identity=username)
+        return jsonify("token": access_token)
+
+
+@app.route("/dashboard",methods=['GET'])
+@jwt_required
+def welcome():
+    username = get_jwt_identity()
+    return jsonify({"message": f"Welcome, {username}!"})
+
 
